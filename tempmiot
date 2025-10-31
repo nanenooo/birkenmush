@@ -1,0 +1,57 @@
+#include <Wire.h> // สำหรับ I2C
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BME280.h>
+
+// กำหนด I2C Address ของเซนเซอร์แต่ละตัว
+// ตรวจสอบให้แน่ใจว่าคุณได้ปรับการตั้งค่าฮาร์ดแวร์ของโมดูลแล้ว
+#define BME_ADDRESS_1 0x76 // BME280 ตัวที่ 1 (แอดเดรสตั้งต้น/ค่าหนึ่ง)
+#define BME_ADDRESS_2 0x77 // BME280 ตัวที่ 2 (แอดเดรสที่เปลี่ยนไป/ค่าสอง)
+
+// สร้าง Object สำหรับเซนเซอร์แต่ละตัว
+Adafruit_BME280 bme1; // ใช้สำหรับ Sensor 1 (0x76)
+Adafruit_BME280 bme2; // ใช้สำหรับ Sensor 2 (0x77)
+
+void setup() {
+  Serial.begin(115200);
+  // ตั้งค่า Wi-Fi หรือฟังก์ชันอื่นๆ ของ R4 WiFi ที่คุณต้องการใช้
+  
+  // 1. เริ่มต้นการทำงานของ Sensor 1
+  if (!bme1.begin(BME_ADDRESS_1)) {
+    Serial.println("Could not find a valid BME280 sensor 1, check wiring or address!");
+    while (1); // หยุดการทำงานถ้าหาเซนเซอร์ไม่พบ
+  }
+  
+  // 2. เริ่มต้นการทำงานของ Sensor 2
+  if (!bme2.begin(BME_ADDRESS_2)) {
+    Serial.println("Could not find a valid BME280 sensor 2, check wiring or address!");
+    while (1); // หยุดการทำงานถ้าหาเซนเซอร์ไม่พบ
+  }
+  
+  Serial.println("BME280 Sensors Initialized.");
+}
+
+void loop() {
+  // อ่านค่าจาก Sensor 1
+  float temp1 = bme1.readTemperature();
+  float hum1 = bme1.readHumidity();
+  float pres1 = bme1.readPressure() / 100.0F; // แปลงจาก Pa เป็น hPa
+
+  // อ่านค่าจาก Sensor 2
+  float temp2 = bme2.readTemperature();
+  float hum2 = bme2.readHumidity();
+  float pres2 = bme2.readPressure() / 100.0F;
+
+  // แสดงผล
+  Serial.println("--- Sensor 1 (Address 0x76) ---");
+  Serial.print("Temperature: "); Serial.print(temp1); Serial.println(" *C");
+  Serial.print("Humidity:    "); Serial.print(hum1); Serial.println(" %");
+  Serial.print("Pressure:    "); Serial.print(pres1); Serial.println(" hPa");
+
+  Serial.println("--- Sensor 2 (Address 0x77) ---");
+  Serial.print("Temperature: "); Serial.print(temp2); Serial.println(" *C");
+  Serial.print("Humidity:    "); Serial.print(hum2); Serial.println(" %");
+  Serial.print("Pressure:    "); Serial.print(pres2); Serial.println(" hPa");
+  Serial.println("---------------------------------");
+  
+  delay(2000); // หน่วงเวลา 2 วินาที ก่อนอ่านค่าใหม่
+}
