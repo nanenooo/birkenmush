@@ -16,4 +16,15 @@ async function loadData() {
     setTimeout(loadData, 2000)
 }
 
+async function loadList() {
+    const response = await fetch(
+        "https://script.google.com/macros/s/AKfycbwqR7D-aP5BPeUYRpzbX6v4MY2_w6jxUg2sMC3wMIlwkKgnIsf27adbSGHmPOBvzW8Z/exec"
+    )
+    const events = await response.text()
+    document.getElementById("data_list").innerHTML = events
+
+    //setTimeout(loadList, 2000)
+}
+
 loadData()
+loadList()
