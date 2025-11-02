@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -68,7 +69,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .error-alert {
@@ -265,9 +268,88 @@
                 font-size: 1rem;
             }
         }
+
+        /* --- NAVBAR (สไตล์ที่ผมเพิ่มให้) --- */
+        .navbar {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(71, 85, 105, 0.5);
+            border-radius: 12px;
+            padding: 10px 25px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            position: sticky;
+            /* ทำให้เมนูลอยตาม */
+            top: 20px;
+            z-index: 1000;
+        }
+
+        .navbar-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #00d4ff;
+            /* สี Cyan */
+            text-decoration: none;
+        }
+
+        .navbar-links {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar-links a {
+            color: #a8a8a8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .navbar-links a:hover,
+        .navbar-links a.active {
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        /* (เพิ่ม) Responsive สำหรับ Nav */
+        @media (max-width: 980px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+                position: static;
+                /* มือถือไม่ควร sticky */
+            }
+
+            .navbar-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.5em 1em;
+            }
+
+            .navbar-links li {
+                margin-left: 0;
+            }
+        }
     </style>
 </head>
+
 <body>
+    <nav class="navbar">
+        <a href="index.html" class="navbar-logo">Flow room</a>
+        <ul class="navbar-links">
+            <li><a href="index.html" class="active">Dashboard</a></li>
+            <li><a href="code.html">Code</a></li>
+            <li><a href="video.html">Video</a></li>
+            <li><a href="details.html">Details</a></li>
+            <li><a href="poster.html">Poster</a></li>
+            <li><a href="about.html">About Us</a></li>
+        </ul>
+    </nav>
     <div class="container">
         <!-- Header -->
         <div class="header">
@@ -380,7 +462,7 @@
         async function fetchData() {
             try {
                 elements.errorAlert.classList.add('hidden');
-                
+
                 const response = await fetch(APPS_SCRIPT_URL, {
                     method: 'GET',
                     mode: 'cors',
@@ -388,7 +470,7 @@
                         'Accept': 'application/json',
                     }
                 });
-                
+
                 if (!response.ok) {
                     throw new Error(`HTTP Error: ${response.status}`);
                 }
@@ -433,7 +515,7 @@
 
         function updateChart(data) {
             const ctx = elements.chart;
-            
+
             const labels = data.map((item, idx) => {
                 if (item.time) return item.time;
                 const hours = Math.floor(idx / 60);
@@ -559,4 +641,5 @@
     </script>
     <script src="getData.js"></script>
 </body>
+
 </html>
